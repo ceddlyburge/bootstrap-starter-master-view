@@ -1,4 +1,4 @@
-module BootstrapStarter exposing (BootstrapStarter, PageContent(..), NavBarLink(..), NavBarVanilla, NavBarDropDown, NavBarDropDownItem, renderPage)
+module BootstrapStarter exposing (BootstrapStarter, PageContent(..), NavBarLink(..), NavBarVanilla, NavBarDropDown, NavBarDropDownItem, renderPage, renderNavBarDropDownItem)
 
 {-|
 
@@ -10,6 +10,7 @@ module BootstrapStarter exposing (BootstrapStarter, PageContent(..), NavBarLink(
 -}
 
 import Html exposing (..)
+import Html.Attributes exposing (..)
 
 
 {-| A Master Page Type that represents the Bootstrap Starter Template (https://getbootstrap.com/docs/4.0/examples/starter-template/#)
@@ -62,4 +63,11 @@ type alias NavBarDropDownItem = {
 
 renderPage: BootstrapStarter msg -> Html msg
 renderPage bootstrap =
-    div [] [ div [] [] ]
+    div [] [ ]
+
+-- <a class="dropdown-item" href="#">Action</a>
+renderNavBarDropDownItem: NavBarDropDownItem -> Html msg
+renderNavBarDropDownItem navBarDropDownItem =
+    a 
+        [ class "dropdown-item", href navBarDropDownItem.url ]
+        [ text navBarDropDownItem.title ] 

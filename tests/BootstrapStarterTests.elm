@@ -3,7 +3,20 @@ module BootstrapStarterTests exposing (..)
 import Test exposing (..)
 import BootstrapStarter exposing (..)
 import Test.Html.Query as Query
-import Test.Html.Selector exposing (text, tag)
+import Test.Html.Selector exposing (..)
+import Html.Attributes as Html
+
+-- <a class="dropdown-item" href="#">Action</a>
+navBarDropDownItem : Test
+navBarDropDownItem =
+    test "navBarDropDownItem returns correct html" <|
+        \() ->
+            renderNavBarDropDownItem (NavBarDropDownItem "Action" "#") 
+            |> Query.fromHtml
+            |> Query.has [ 
+                class "dropdown-item"
+                , attribute (Html.href "#")
+                , text "Action"  ]
 
 endToEnd : Test
 endToEnd =
@@ -36,7 +49,6 @@ endToEnd =
             in
                 renderPage masterPageType
                 |> Query.fromHtml
-                |> Query.find [ tag "div" ]
                 |> Query.has [ text 
                 """<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
       <a class="navbar-brand" href="#">Navbar</a>
