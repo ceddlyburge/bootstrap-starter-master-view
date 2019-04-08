@@ -1,4 +1,6 @@
-module BootstrapStarter exposing (BootstrapStarter, PageContent(..), NavBarLink(..), NavBarVanilla, NavBarDropDown, NavBarDropDownItem, renderPage, renderNavBarDropDownItem)
+module BootstrapStarter exposing (BootstrapStarter, PageContent(..), NavBarLink(..), NavBarVanilla, NavBarDropDown, NavBarDropDownItem, renderPage, renderNavBarDropDownItem, renderNavBarDropDown)
+
+-- add comment about scope / visisibility and having to make so for the tests
 
 {-|
 
@@ -9,8 +11,10 @@ module BootstrapStarter exposing (BootstrapStarter, PageContent(..), NavBarLink(
 
 -}
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
+import Html.String as Html exposing (Html)
+import Html.String.Attributes as Attributes
+--import Html exposing (..)
+--import Html.Attributes exposing (..)
 
 
 {-| A Master Page Type that represents the Bootstrap Starter Template (https://getbootstrap.com/docs/4.0/examples/starter-template/#)
@@ -61,13 +65,33 @@ type alias NavBarDropDownItem = {
     , url: String
 }
 
+{-| Renders a BootstrapStarter to Html
+-}
 renderPage: BootstrapStarter msg -> Html msg
 renderPage bootstrap =
-    div [] [ ]
+    Html.div [] [ ]
 
 -- <a class="dropdown-item" href="#">Action</a>
 renderNavBarDropDownItem: NavBarDropDownItem -> Html msg
 renderNavBarDropDownItem navBarDropDownItem =
-    a 
-        [ class "dropdown-item", href navBarDropDownItem.url ]
-        [ text navBarDropDownItem.title ] 
+    Html.a 
+        [ Attributes.class "dropdown-item", Attributes.href navBarDropDownItem.url ]
+        [ Html.text navBarDropDownItem.title ] 
+
+-- <li class="nav-item dropdown">
+--   <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Title</a>
+--   <div class="dropdown-menu" aria-labelledby="dropdown01">
+--     <a class="dropdown-item" href="#">Action</a>
+--   </div>
+-- </li>
+renderNavBarDropDown: NavBarDropDown -> Html msg
+renderNavBarDropDown navBarDropDown =
+    Html.li 
+        [ Attributes.class "nav-item dropdown" ]
+        [   Html.a 
+                [ Attributes.class "nav-link dropdown-toggle", Attributes.href navBarDropDown.url, Attributes.id navBarDropDown.id ]
+                [ Html.text navBarDropDown.title ],
+            Html.div
+                [ Attributes.class "dropdown-menu" ]
+                (List.map renderNavBarDropDownItem navBarDropDown.items)
+        ] 
