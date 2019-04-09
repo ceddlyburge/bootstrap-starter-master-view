@@ -16,7 +16,6 @@ navBarDropDownItem =
             |> Html.toString 0 
             |> Expect.equal """<a class="dropdown-item" href="#">Action</a>"""
 
-
 navBarDropDown : Test
 navBarDropDown =
     test "navBarDropDown returns correct html" <|
@@ -28,7 +27,33 @@ navBarDropDown =
                   "http://example.com"
                   [ NavBarDropDownItem "Action" "#" ])
             |> Html.toString 0 
-            |> Expect.equal """<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01">Title</a><div class="dropdown-menu"><a class="dropdown-item" href="#">Action</a></div></li>""" 
+            |> Expect.equal """<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Title</a><div class="dropdown-menu" aria-labelledby="dropdown01"><a class="dropdown-item" href="#">Action</a></div></li>""" 
+
+
+navBarLinkVanillaSelected : Test
+navBarLinkVanillaSelected =
+    test "navBarVanilla returns correct html when selected" <|
+        \() ->
+            renderNavBarVanilla (NavBarVanilla "Home" "#" LinkStateSelected) 
+            |> Html.toString 0 
+            |> Expect.equal """<li class="nav-item active"><a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a></li>"""
+
+
+navBarLinkVanillaDisabled : Test
+navBarLinkVanillaDisabled =
+    test "navBarVanilla returns correct html when disabled" <|
+        \() ->
+            renderNavBarVanilla (NavBarVanilla "Disabled" "#" LinkStateDisabled) 
+            |> Html.toString 0 
+            |> Expect.equal """<li class="nav-item"><a class="nav-link disabled" href="#">Disabled</a></li>"""
+
+navBarLinkVanilla : Test
+navBarLinkVanilla =
+    test "navBarVanilla returns correct html when in vanilla state" <|
+        \() ->
+            renderNavBarVanilla (NavBarVanilla "Link" "#" LinkStateVanilla) 
+            |> Html.toString 0 
+            |> Expect.equal """<li class="nav-item"><a class="nav-link" href="#">Link</a></li>"""
 
 endToEnd : Test
 endToEnd =
@@ -39,9 +64,9 @@ endToEnd =
                     BootstrapStarter
                         "Navbar" 
                         [
-                            Vanilla (NavBarVanilla "Home" "#" True False)
-                            , Vanilla (NavBarVanilla "Link" "#" False True)
-                            , Vanilla (NavBarVanilla "Disabled" "#" False False)
+                            Vanilla (NavBarVanilla "Home" "#" LinkStateSelected)
+                            , Vanilla (NavBarVanilla "Link" "#" LinkStateVanilla)
+                            , Vanilla (NavBarVanilla "Disabled" "#" LinkStateDisabled)
                             , DropDown (NavBarDropDown
                                 "dropdown01"
                                 "dropdown"
