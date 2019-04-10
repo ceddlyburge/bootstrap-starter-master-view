@@ -10,8 +10,9 @@ module BootstrapStarter exposing (
     renderNavBarDropDownItem, 
     renderNavBarDropDown, 
     renderNavBarVanilla, 
-    renderNavBarLinks, 
-    renderSearch)
+    renderSearch,
+    renderNavBar,
+    renderNavBarLinks)
 
 -- add comment about scope / visisibility and having to make so for the tests
 
@@ -89,6 +90,50 @@ type alias NavBarDropDownItem = {
 renderPage: BootstrapStarter msg -> Html msg
 renderPage bootstrap =
     Html.div [] [ ]
+
+-- <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+--   <a class="navbar-brand" href="#">Navbar</a>
+--   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+--     <span class="navbar-toggler-icon"></span>
+--   </button>
+--   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+--     <ul class="navbar-nav mr-auto">
+--       <li class="nav-item">
+--         <a class="nav-link" href="#">Link</a>
+--       </li>  
+--     </ul>
+--     <form class="form-inline my-2 my-lg-0">
+--       <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+--       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+--     </form>
+--   </div>
+-- </nav>
+renderNavBar: String -> List NavBarLink -> Html msg
+renderNavBar searchTitle navBarLinks =
+    Html.nav
+        [ Attributes.class "navbar navbar-expand-md navbar-dark bg-dark fixed-top" ]
+        [ Html.a 
+            [ Attributes.class "navbar-brand", Attributes.href "#" ]
+            [ Html.text "Navbar" ]
+        , Html.button 
+            [ Attributes.class "navbar-toggler"
+            , Attributes.attribute "type" "button"
+            , Attributes.attribute "data-toggle" "collapse"
+            , Attributes.attribute "data-target" "#navbarsExampleDefault"
+            , Attributes.attribute "aria-controls" "navbarsExampleDefault"
+            , Attributes.attribute "aria-expanded" "false"
+            , Attributes.attribute "aria-label" "Toggle navigation"
+            ]
+            [ Html.span 
+                [ Attributes.class "navbar-toggler-icon" ]
+                []
+            ]
+        , Html.div
+            [ Attributes.class "collapse navbar-collapse"
+            , Attributes.id "navbarsExampleDefault" ]
+            [ renderNavBarLinks navBarLinks
+            , renderSearch searchTitle ]
+        ]
 
 renderNavBarLinks: List NavBarLink -> Html msg
 renderNavBarLinks navBarLinks =
