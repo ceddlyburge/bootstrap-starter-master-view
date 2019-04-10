@@ -47,7 +47,7 @@ type alias BootstrapStarter msg = {
 -}
 type PageContent msg = 
     Paragraphs (List String)
-    | Custom (List (Html msg))
+    | Custom (Html msg)
 
 
 {-| Represents a NavBarLink 
@@ -235,8 +235,8 @@ renderPageContent pageContent =
             Html.div
                 []
                 (List.map (\(paragraph) -> Html.p [] [ Html.text paragraph ]) paragraphs)
-        _ ->
-            Html.div [] []
+        Custom customHtml ->
+            customHtml
 
 -- repeating the case statement in selectedClass and selectedSpan is a bit of a code smell but I'm not going to worry about it for now
 selectedClass: LinkState -> String
