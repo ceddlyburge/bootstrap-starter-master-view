@@ -104,6 +104,13 @@ navBar =
 </nav>"""
 
 -- add test for the page
+pageContentParagraphs : Test
+pageContentParagraphs =
+    test "renderPageContent returns p tags for each paragraph" <|
+        \() ->
+            renderPageContent (Paragraphs [ "a", "b" ] )
+            |> Html.toString 0
+            |> Expect.equal """<div><p>a</p><p>b</p></div>"""
 
 endToEnd : Test
 endToEnd =

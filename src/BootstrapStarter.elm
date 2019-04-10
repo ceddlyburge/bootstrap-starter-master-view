@@ -12,7 +12,8 @@ module BootstrapStarter exposing (
     renderNavBarVanilla, 
     renderSearch,
     renderNavBar,
-    renderNavBarLinks)
+    renderNavBarLinks,
+    renderPageContent)
 
 -- add comment about scope / visisibility and having to make so for the tests
 
@@ -226,6 +227,16 @@ renderSearch searchTitle =
             ] 
             [ Html.text searchTitle ]   
         ] 
+
+renderPageContent: PageContent msg -> Html msg
+renderPageContent pageContent =
+    case pageContent of
+        Paragraphs paragraphs ->
+            Html.div
+                []
+                (List.map (\(paragraph) -> Html.p [] [ Html.text paragraph ]) paragraphs)
+        _ ->
+            Html.div [] []
 
 -- repeating the case statement in selectedClass and selectedSpan is a bit of a code smell but I'm not going to worry about it for now
 selectedClass: LinkState -> String
