@@ -1,4 +1,4 @@
-module BootstrapStarter exposing (BootstrapStarter, PageContent(..), NavBarLink(..), NavBarVanilla, LinkState(..), NavBarDropDown, NavBarDropDownItem, renderPage, renderNavBarDropDownItem, renderNavBarDropDown, renderNavBarVanilla)
+module BootstrapStarter exposing (BootstrapStarter, PageContent(..), NavBarLink(..), NavBarVanilla, LinkState(..), NavBarDropDown, NavBarDropDownItem, renderPage, renderNavBarDropDownItem, renderNavBarDropDown, renderNavBarVanilla, renderNavBarLinks)
 
 -- add comment about scope / visisibility and having to make so for the tests
 
@@ -77,12 +77,19 @@ renderPage: BootstrapStarter msg -> Html msg
 renderPage bootstrap =
     Html.div [] [ ]
 
--- <a class="dropdown-item" href="#">Action</a>
-renderNavBarDropDownItem: NavBarDropDownItem -> Html msg
-renderNavBarDropDownItem navBarDropDownItem =
-    Html.a 
-        [ Attributes.class "dropdown-item", Attributes.href navBarDropDownItem.url ]
-        [ Html.text navBarDropDownItem.title ] 
+renderNavBarLinks: List NavBarLink -> Html msg
+renderNavBarLinks navBarLinks =
+    Html.ul
+        [ Attributes.class "navbar-nav mr-auto" ]
+        ( List.map renderNavBarLink navBarLinks)
+
+renderNavBarLink: NavBarLink -> Html msg
+renderNavBarLink navBarlink =
+    case navBarlink of 
+        Vanilla navBarLinkVanilla ->
+            renderNavBarVanilla navBarLinkVanilla
+        DropDown navBarDropDown ->
+            renderNavBarDropDown navBarDropDown 
 
 -- <li class="nav-item dropdown">
 --   <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Title</a>
@@ -111,6 +118,13 @@ renderNavBarDropDown navBarDropDown =
                  ]
                 (List.map renderNavBarDropDownItem navBarDropDown.items)
         ] 
+
+-- <a class="dropdown-item" href="#">Action</a>
+renderNavBarDropDownItem: NavBarDropDownItem -> Html msg
+renderNavBarDropDownItem navBarDropDownItem =
+    Html.a 
+        [ Attributes.class "dropdown-item", Attributes.href navBarDropDownItem.url ]
+        [ Html.text navBarDropDownItem.title ] 
 
 -- <li class="nav-item active">
 --     <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>

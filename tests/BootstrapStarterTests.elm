@@ -55,6 +55,18 @@ navBarLinkVanilla =
             |> Html.toString 0 
             |> Expect.equal """<li class="nav-item"><a class="nav-link" href="#">Link</a></li>"""
 
+navBarLinks : Test
+navBarLinks =
+    test "renderNavBarLinks returns correct html" <|
+        \() ->
+            renderNavBarLinks [ Vanilla <| NavBarVanilla "Link" "#" LinkStateVanilla ]
+            |> Html.toString 0 
+            |> Expect.equal """<ul class="navbar-nav mr-auto"><li class="nav-item"><a class="nav-link" href="#">Link</a></li></ul>"""
+
+-- add test for the search form
+
+-- add test for the page
+
 endToEnd : Test
 endToEnd =
     test "BootstrapStarter returns same html as bootstrap example page (https://getbootstrap.com/docs/4.0/examples/starter-template/)" <|
