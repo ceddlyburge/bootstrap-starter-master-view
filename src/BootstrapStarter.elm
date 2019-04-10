@@ -1,4 +1,17 @@
-module BootstrapStarter exposing (BootstrapStarter, PageContent(..), NavBarLink(..), NavBarVanilla, LinkState(..), NavBarDropDown, NavBarDropDownItem, renderPage, renderNavBarDropDownItem, renderNavBarDropDown, renderNavBarVanilla, renderNavBarLinks)
+module BootstrapStarter exposing (
+    BootstrapStarter, 
+    PageContent(..), 
+    NavBarLink(..), 
+    NavBarVanilla, 
+    LinkState(..), 
+    NavBarDropDown, 
+    NavBarDropDownItem, 
+    renderPage, 
+    renderNavBarDropDownItem, 
+    renderNavBarDropDown, 
+    renderNavBarVanilla, 
+    renderNavBarLinks, 
+    renderSearch)
 
 -- add comment about scope / visisibility and having to make so for the tests
 
@@ -145,6 +158,28 @@ renderNavBarVanilla navBarVanilla =
                     Attributes.href navBarVanilla.url
                 ]
                 [ Html.text (navBarVanilla.title ++ selectedSpan navBarVanilla.state) ]
+        ] 
+
+-- <form class="form-inline my-2 my-lg-0">
+--   <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+--   <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+-- </form>
+renderSearch: String -> Html msg
+renderSearch searchTitle =
+    Html.form 
+        [ Attributes.class "form-inline my-2 my-lg-0" ]
+        [ Html.input 
+            [ Attributes.class "form-control mr-sm-2"
+            , Attributes.attribute "type" "text" 
+            , Attributes.attribute "placeholder" searchTitle 
+            , Attributes.attribute "aria-label" searchTitle 
+            ] 
+            []
+        , Html.button 
+            [ Attributes.class "btn btn-outline-success my-2 my-sm-0"
+            , Attributes.attribute "type" "submit" 
+            ] 
+            [ Html.text searchTitle ]   
         ] 
 
 -- repeating the case statement in selectedClass and selectedSpan is a bit of a code smell but I'm not going to worry about it for now

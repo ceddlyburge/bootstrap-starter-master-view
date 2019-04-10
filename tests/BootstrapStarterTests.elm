@@ -64,6 +64,14 @@ navBarLinks =
             |> Expect.equal """<ul class="navbar-nav mr-auto"><li class="nav-item"><a class="nav-link" href="#">Link</a></li></ul>"""
 
 -- add test for the search form
+search : Test
+search =
+    test "renderSearch returns correct html" <|
+        \() ->
+            renderSearch "Search"
+            |> Html.toString 0 
+            |> Expect.equal """<form class="form-inline my-2 my-lg-0"><input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search"><button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button></form>"""
+
 
 -- add test for the page
 
