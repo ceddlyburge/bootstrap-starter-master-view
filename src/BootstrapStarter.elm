@@ -13,7 +13,7 @@ module BootstrapStarter exposing (
     renderSearch,
     renderNavBar,
     renderNavBarLinks,
-    renderPageContent)
+    renderPageTitleAndContent)
 
 -- add comment about scope / visisibility and having to make so for the tests
 
@@ -47,7 +47,7 @@ type alias BootstrapStarter msg = {
 -}
 type PageContent msg = 
     Paragraphs (List String)
-    | Custom (Html msg)
+    | Custom (List (Html msg) )
 
 
 {-| Represents a NavBarLink 
@@ -90,7 +90,10 @@ type alias NavBarDropDownItem = {
 -}
 renderPage: BootstrapStarter msg -> Html msg
 renderPage bootstrap =
-    Html.div [] [ ]
+    Html.div
+        []
+        [ renderNavBar bootstrap.searchTitle bootstrap.navBarLinks
+        , renderPageTitleAndContent bootstrap.pageTitle bootstrap.pageContent ]  
 
 -- <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
 --   <a class="navbar-brand" href="#">Navbar</a>
@@ -203,7 +206,10 @@ renderNavBarVanilla navBarVanilla =
                     Attributes.class ("nav-link" ++ disabledClass navBarVanilla.state), 
                     Attributes.href navBarVanilla.url
                 ]
-                [ Html.text (navBarVanilla.title ++ selectedSpan navBarVanilla.state) ]
+                (
+                    [ Html.text navBarVanilla.title ] 
+                    ++ selectedSpan navBarVanilla.state
+                ) 
         ] 
 
 -- <form class="form-inline my-2 my-lg-0">
@@ -228,13 +234,28 @@ renderSearch searchTitle =
             [ Html.text searchTitle ]   
         ] 
 
-renderPageContent: PageContent msg -> Html msg
+renderPageTitleAndContent: String -> PageContent msg -> Html msg
+renderPageTitleAndContent pageTitle pageContent =
+    Html.main_
+        [ Attributes.attribute "role" "main"
+        , Attributes.class "container" 
+        ] 
+        [ Html.div
+            [ Attributes.class "starter-template" ] 
+            (
+                [ Html.h1 
+                    []
+                    [ Html.text pageTitle ]
+                ]
+                ++ renderPageContent pageContent
+            )
+        ]
+
+renderPageContent: PageContent msg -> List (Html msg)
 renderPageContent pageContent =
     case pageContent of
         Paragraphs paragraphs ->
-            Html.div
-                []
-                (List.map (\(paragraph) -> Html.p [] [ Html.text paragraph ]) paragraphs)
+            List.map (\(paragraph) -> Html.p [] [ Html.text paragraph ]) paragraphs
         Custom customHtml ->
             customHtml
 
@@ -247,13 +268,16 @@ selectedClass linkState =
         _ ->
             ""
 
-selectedSpan: LinkState -> String
+selectedSpan: LinkState -> List (Html msg)
 selectedSpan linkState =
     case linkState of 
         LinkStateSelected ->
-            """ <span class="sr-only">(current)</span>"""
+            [ Html.span 
+                [ Attributes.class "sr-only" ]
+                [ Html.text "(current)" ]
+            ]
         _ ->
-            ""
+            []
 
 disabledClass: LinkState -> String
 disabledClass linkState =
