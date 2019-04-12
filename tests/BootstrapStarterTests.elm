@@ -12,7 +12,7 @@ navBarDropDownItem : Test
 navBarDropDownItem =
     test "navBarDropDownItem returns correct html" <|
         \() ->
-            renderNavBarDropDownItem (NavBarDropDownItem "Action" "#") 
+            renderNavBarDropDownItem (NavBarDropDownItem "Action" "#" ()) 
             |> Html.toString 0 
             |> Expect.equal """<a class="dropdown-item" href="#">Action</a>"""
 
@@ -25,7 +25,7 @@ navBarDropDown =
                   "Title"
                   "dropdown01"
                   "http://example.com"
-                  [ NavBarDropDownItem "Action" "#" ])
+                  [ NavBarDropDownItem "Action" "#" () ])
             |> Html.toString 0 
             |> Expect.equal """<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Title</a><div class="dropdown-menu" aria-labelledby="dropdown01"><a class="dropdown-item" href="#">Action</a></div></li>""" 
 
@@ -34,7 +34,7 @@ navBarLinkVanillaSelected : Test
 navBarLinkVanillaSelected =
     test "navBarVanilla returns correct html when selected" <|
         \() ->
-            renderNavBarVanilla (NavBarVanilla "Home" "#" LinkStateSelected) 
+            renderNavBarVanilla (NavBarVanilla "Home" "#" () LinkStateSelected) 
             |> Html.toString 0 
             |> Expect.equal """<li class="nav-item active"><a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a></li>"""
 
@@ -43,7 +43,7 @@ navBarLinkVanillaDisabled : Test
 navBarLinkVanillaDisabled =
     test "navBarVanilla returns correct html when disabled" <|
         \() ->
-            renderNavBarVanilla (NavBarVanilla "Disabled" "#" LinkStateDisabled) 
+            renderNavBarVanilla (NavBarVanilla "Disabled" "#" () LinkStateDisabled) 
             |> Html.toString 0 
             |> Expect.equal """<li class="nav-item"><a class="nav-link disabled" href="#">Disabled</a></li>"""
 
@@ -51,7 +51,7 @@ navBarLinkVanilla : Test
 navBarLinkVanilla =
     test "navBarVanilla returns correct html when in vanilla state" <|
         \() ->
-            renderNavBarVanilla (NavBarVanilla "Link" "#" LinkStateVanilla) 
+            renderNavBarVanilla (NavBarVanilla "Link" "#" () LinkStateVanilla) 
             |> Html.toString 0 
             |> Expect.equal """<li class="nav-item"><a class="nav-link" href="#">Link</a></li>"""
 
@@ -59,7 +59,7 @@ navBarLinks : Test
 navBarLinks =
     test "renderNavBarLinks returns correct html" <|
         \() ->
-            renderNavBarLinks [ Vanilla <| NavBarVanilla "Link" "#" LinkStateVanilla ]
+            renderNavBarLinks [ Vanilla <| NavBarVanilla "Link" "#" () LinkStateVanilla ]
             |> Html.toString 0 
             |> Expect.equal """<ul class="navbar-nav mr-auto"><li class="nav-item"><a class="nav-link" href="#">Link</a></li></ul>"""
   
@@ -76,7 +76,7 @@ navBar : Test
 navBar =
     test "renderNavBar returns correct html" <|
         \() ->
-            renderNavBar "Search" [ Vanilla <| NavBarVanilla "Link" "#" LinkStateVanilla ]
+            renderNavBar "Search" [ Vanilla <| NavBarVanilla "Link" "#" () LinkStateVanilla ]
             |> Html.toString 2
             |> Expect.equal """<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
   <a class="navbar-brand" href="#">
@@ -128,18 +128,20 @@ endToEnd =
                 masterPageType = 
                     BootstrapStarter
                         "Navbar" 
+                        "#"
+                        ()
                         [
-                            Vanilla (NavBarVanilla "Home" "#" LinkStateSelected)
-                            , Vanilla (NavBarVanilla "Link" "#" LinkStateVanilla)
-                            , Vanilla (NavBarVanilla "Disabled" "#" LinkStateDisabled)
+                            Vanilla (NavBarVanilla "Home" "#" () LinkStateSelected)
+                            , Vanilla (NavBarVanilla "Link" "#" () LinkStateVanilla)
+                            , Vanilla (NavBarVanilla "Disabled" "#" () LinkStateDisabled)
                             , DropDown (NavBarDropDown
                                 "Dropdown"
                                 "dropdown01"
                                 "http://example.com"
                                 [
-                                    NavBarDropDownItem "Action" "#"
-                                    , NavBarDropDownItem "Another action" "#"
-                                    , NavBarDropDownItem "Something else here" "#"
+                                    NavBarDropDownItem "Action" "#" () 
+                                    , NavBarDropDownItem "Another action" "#" () 
+                                    , NavBarDropDownItem "Something else here" "#" () 
                                 ])
                         ]
                         "Search"

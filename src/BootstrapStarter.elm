@@ -28,16 +28,16 @@ module BootstrapStarter exposing (
 
 import Html.String as Html exposing (Html)
 import Html.String.Attributes as Attributes
---import Html exposing (..)
---import Html.Attributes exposing (..)
 
 -- add types for some things. url, maybe title.
 
 {-| A Master Page Type that represents the Bootstrap Starter Template (https://getbootstrap.com/docs/4.0/examples/starter-template/#)
 -}
 type alias BootstrapStarter msg = {
-    navBarTitle : String 
-    , navBarLinks : List NavBarLink
+    navBarTitle : String
+    , navBarUrl : String
+    , navBarOnClick : msg 
+    , navBarLinks : List (NavBarLink msg)
     , searchTitle : String
     , pageTitle : String
     , pageContent : PageContent msg  
@@ -52,15 +52,16 @@ type PageContent msg =
 
 {-| Represents a NavBarLink 
 -}
-type NavBarLink = 
-    Vanilla NavBarVanilla
-    | DropDown NavBarDropDown
+type NavBarLink msg = 
+    Vanilla (NavBarVanilla msg)
+    | DropDown (NavBarDropDown msg)
 
 {-| Represents a vanilla NavBarLink 
 -}
-type alias NavBarVanilla = {
+type alias NavBarVanilla msg = {
     title: String
     , url: String
+    , onClick: msg
     , state: LinkState
 }
 
@@ -72,18 +73,19 @@ type LinkState =
 
 {-| Represents A NavBarLink drop down list
 -}
-type alias NavBarDropDown = {
+type alias NavBarDropDown msg = {
     title: String
     , id: String
     , url: String
-    , items: List NavBarDropDownItem
+    , items: List (NavBarDropDownItem msg)
 }
 
 {-| Represents A NavBarLink drop down list item
 -}
-type alias NavBarDropDownItem = {
+type alias NavBarDropDownItem msg = {
     title: String
     , url: String
+    , onClick: msg
 }
 
 {-| Renders a BootstrapStarter to Html
@@ -116,7 +118,7 @@ renderPage bootstrap =
 --     </form>
 --   </div>
 -- </nav>
-renderNavBar: String -> List NavBarLink -> Html msg
+renderNavBar: String -> List (NavBarLink msg) -> Html msg
 renderNavBar searchTitle navBarLinks =
     Html.nav
         [ Attributes.class "navbar navbar-expand-md navbar-dark bg-dark fixed-top" ]
@@ -143,13 +145,13 @@ renderNavBar searchTitle navBarLinks =
             , renderSearch searchTitle ]
         ]
 
-renderNavBarLinks: List NavBarLink -> Html msg
+renderNavBarLinks: List (NavBarLink msg) -> Html msg
 renderNavBarLinks navBarLinks =
     Html.ul
         [ Attributes.class "navbar-nav mr-auto" ]
         ( List.map renderNavBarLink navBarLinks)
 
-renderNavBarLink: NavBarLink -> Html msg
+renderNavBarLink: NavBarLink msg -> Html msg
 renderNavBarLink navBarlink =
     case navBarlink of 
         Vanilla navBarLinkVanilla ->
@@ -163,7 +165,7 @@ renderNavBarLink navBarlink =
 --     <a class="dropdown-item" href="#">Action</a>
 --   </div>
 -- </li>
-renderNavBarDropDown: NavBarDropDown -> Html msg
+renderNavBarDropDown: NavBarDropDown msg -> Html msg
 renderNavBarDropDown navBarDropDown =
     Html.li 
         [ Attributes.class "nav-item dropdown" ]
@@ -186,7 +188,7 @@ renderNavBarDropDown navBarDropDown =
         ] 
 
 -- <a class="dropdown-item" href="#">Action</a>
-renderNavBarDropDownItem: NavBarDropDownItem -> Html msg
+renderNavBarDropDownItem: NavBarDropDownItem msg -> Html msg
 renderNavBarDropDownItem navBarDropDownItem =
     Html.a 
         [ Attributes.class "dropdown-item", Attributes.href navBarDropDownItem.url ]
@@ -201,7 +203,7 @@ renderNavBarDropDownItem navBarDropDownItem =
 -- <li class="nav-item">
 --     <a class="nav-link disabled" href="#">Disabled</a>
 -- </li>
-renderNavBarVanilla: NavBarVanilla -> Html msg
+renderNavBarVanilla: NavBarVanilla msg -> Html msg
 renderNavBarVanilla navBarVanilla =
     Html.li 
         [ Attributes.class ("nav-item" ++ selectedClass navBarVanilla.state) ]
