@@ -3,10 +3,8 @@ module BootstrapStarterTests exposing (..)
 import Test exposing (..)
 import Expect exposing (..)
 import BootstrapStarter exposing (..)
+import BootstrapStarterRenderHtmlString exposing (..)
 import Html.String as Html exposing (Html)
---import Test.Html.Query as Query
---import Test.Html.Selector exposing (..)
---import Html.Attributes as Html
 
 navBarDropDownItem : Test
 navBarDropDownItem =
