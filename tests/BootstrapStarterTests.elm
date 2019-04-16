@@ -10,9 +10,9 @@ navBarDropDownItem : Test
 navBarDropDownItem =
     test "navBarDropDownItem returns correct html" <|
         \() ->
-            renderNavBarDropDownItem (NavBarDropDownItem "Action" "#" ()) 
+            renderNavBarDropDownItem (NavBarDropDownItem "Action" ()) 
             |> Html.toString 0 
-            |> Expect.equal """<a class="dropdown-item" href="#">Action</a>"""
+            |> Expect.equal """<a class="dropdown-item">Action</a>"""
 
 navBarDropDown : Test
 navBarDropDown =
@@ -22,62 +22,67 @@ navBarDropDown =
               ( NavBarDropDown
                   "Title"
                   "dropdown01"
-                  "http://example.com"
-                  [ NavBarDropDownItem "Action" "#" () ])
+                  [ NavBarDropDownItem "Action" () ])
             |> Html.toString 0 
-            |> Expect.equal """<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Title</a><div class="dropdown-menu" aria-labelledby="dropdown01"><a class="dropdown-item" href="#">Action</a></div></li>""" 
+            |> Expect.equal """<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Title</a><div class="dropdown-menu" aria-labelledby="dropdown01"><a class="dropdown-item">Action</a></div></li>""" 
 
 
 navBarLinkVanillaSelected : Test
 navBarLinkVanillaSelected =
     test "navBarVanilla returns correct html when selected" <|
         \() ->
-            renderNavBarVanilla (NavBarVanilla "Home" "#" () LinkStateSelected) 
+            renderNavBarVanilla (NavBarVanilla "Home" () LinkStateSelected) 
             |> Html.toString 0 
-            |> Expect.equal """<li class="nav-item active"><a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a></li>"""
+            |> Expect.equal """<li class="nav-item active"><a class="nav-link">Home<span class="sr-only">(current)</span></a></li>"""
 
 
 navBarLinkVanillaDisabled : Test
 navBarLinkVanillaDisabled =
     test "navBarVanilla returns correct html when disabled" <|
         \() ->
-            renderNavBarVanilla (NavBarVanilla "Disabled" "#" () LinkStateDisabled) 
+            renderNavBarVanilla (NavBarVanilla "Disabled" () LinkStateDisabled) 
             |> Html.toString 0 
-            |> Expect.equal """<li class="nav-item"><a class="nav-link disabled" href="#">Disabled</a></li>"""
+            |> Expect.equal """<li class="nav-item"><a class="nav-link disabled">Disabled</a></li>"""
 
 navBarLinkVanilla : Test
 navBarLinkVanilla =
     test "navBarVanilla returns correct html when in vanilla state" <|
         \() ->
-            renderNavBarVanilla (NavBarVanilla "Link" "#" () LinkStateVanilla) 
+            renderNavBarVanilla (NavBarVanilla "Link" () LinkStateVanilla) 
             |> Html.toString 0 
-            |> Expect.equal """<li class="nav-item"><a class="nav-link" href="#">Link</a></li>"""
+            |> Expect.equal """<li class="nav-item"><a class="nav-link">Link</a></li>"""
 
 navBarLinks : Test
 navBarLinks =
     test "renderNavBarLinks returns correct html" <|
         \() ->
-            renderNavBarLinks [ Vanilla <| NavBarVanilla "Link" "#" () LinkStateVanilla ]
+            renderNavBarLinks [ Vanilla <| NavBarVanilla "Link" () LinkStateVanilla ]
             |> Html.toString 0 
-            |> Expect.equal """<ul class="navbar-nav mr-auto"><li class="nav-item"><a class="nav-link" href="#">Link</a></li></ul>"""
+            |> Expect.equal """<ul class="navbar-nav mr-auto"><li class="nav-item"><a class="nav-link">Link</a></li></ul>"""
   
 search : Test
 search =
     test "renderSearch returns correct html" <|
         \() ->
-            renderSearch "Search"
+            renderSearch (Search "Search" (\s -> ()) () )
             |> Html.toString 0
-            |> Expect.equal """<form class="form-inline my-2 my-lg-0"><input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search"><button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button></form>"""
+            |> Expect.equal """<form class="form-inline my-2 my-lg-0"><input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search"><button class="btn btn-outline-success my-2 my-sm-0" type="button">Search</button></form>"""
 
 
 navBar : Test
 navBar =
     test "renderNavBar returns correct html" <|
         \() ->
-            renderNavBar "Search" [ Vanilla <| NavBarVanilla "Link" "#" () LinkStateVanilla ]
+            renderNavBar 
+              (NavBar 
+                "Navbar"
+                ()
+                [ Vanilla <| NavBarVanilla "Link" () LinkStateVanilla ]
+                (Search "Search" (\s -> ()) ())
+              ) 
             |> Html.toString 2
             |> Expect.equal """<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-  <a class="navbar-brand" href="#">
+  <a class="navbar-brand" tab-index="1">
     Navbar
   </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,14 +92,14 @@ navBar =
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link">
           Link
         </a>
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="button">
         Search
       </button>
     </form>
@@ -117,7 +122,6 @@ pageTitleAndContentCustom =
             |> Html.toString 0
             |> Expect.equal """<main role="main" class="container"><div class="starter-template"><h1>Heading</h1><div></div></div></main>"""
 
--- add links to js files
 endToEnd : Test
 endToEnd =
     test "BootstrapStarter returns same html as bootstrap example page (https://getbootstrap.com/docs/4.0/examples/starter-template/)" <|
@@ -125,24 +129,28 @@ endToEnd =
             let
                 masterPageType = 
                     BootstrapStarter
-                        "Navbar" 
-                        "#"
-                        ()
-                        [
-                            Vanilla (NavBarVanilla "Home" "#" () LinkStateSelected)
-                            , Vanilla (NavBarVanilla "Link" "#" () LinkStateVanilla)
-                            , Vanilla (NavBarVanilla "Disabled" "#" () LinkStateDisabled)
+                        (NavBar 
+                          "Navbar" 
+                          ()
+                          [
+                            Vanilla (NavBarVanilla "Home" () LinkStateSelected)
+                            , Vanilla (NavBarVanilla "Link" () LinkStateVanilla)
+                            , Vanilla (NavBarVanilla "Disabled" () LinkStateDisabled)
                             , DropDown (NavBarDropDown
                                 "Dropdown"
                                 "dropdown01"
-                                "http://example.com"
                                 [
-                                    NavBarDropDownItem "Action" "#" () 
-                                    , NavBarDropDownItem "Another action" "#" () 
-                                    , NavBarDropDownItem "Something else here" "#" () 
+                                    NavBarDropDownItem "Action" () 
+                                    , NavBarDropDownItem "Another action" () 
+                                    , NavBarDropDownItem "Something else here" () 
                                 ])
-                        ]
-                        "Search"
+                          ]
+                          ( Search 
+                            "Search"
+                            (\s -> ())
+                            ()
+                          )
+                        )
                         "Bootstrap starter template"
                         (Paragraphs [ 
                             "Use this document as a way to quickly start any new project."
@@ -154,7 +162,7 @@ endToEnd =
                 |> String.filter isBlackspace
                 |> Expect.equal (String.filter isBlackspace """<div>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" tab-index="1">
       Navbar
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -164,7 +172,7 @@ endToEnd =
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="#">
+          <a class="nav-link">
             Home
             <span class="sr-only">
               (current)
@@ -172,27 +180,27 @@ endToEnd =
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link">
             Link
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link disabled" href="#">
+          <a class="nav-link disabled">
             Disabled
           </a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Dropdown
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdown01">
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item">
               Action
             </a>
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item">
               Another action
             </a>
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item">
               Something else here
             </a>
           </div>
@@ -200,7 +208,7 @@ endToEnd =
       </ul>
       <form class="form-inline my-2 my-lg-0">
         <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="button">
           Search
         </button>
       </form>
@@ -219,9 +227,6 @@ endToEnd =
       </p>
     </div>
   </main>
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </div>""" )
 
 isBlackspace: Char -> Bool

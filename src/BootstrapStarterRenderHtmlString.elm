@@ -10,27 +10,29 @@ module BootstrapStarterRenderHtmlString exposing (
 
 import Html.String as Html exposing (Html)
 import Html.String.Attributes as Attributes
+import Html.String.Events as Events
 import BootstrapStarter exposing (..)
 
 -- add comment about scope / visisibility and having to make so for the tests
 
 renderPage: BootstrapStarter msg -> Html msg
 renderPage bootstrap =
-    Html.div
+    Html.node
+        "div"
         []
         (
-            [ renderNavBar bootstrap.searchTitle bootstrap.navBarLinks
+            [ renderNavBar bootstrap.navBar
             , renderPageTitleAndContent bootstrap.pageTitle bootstrap.pageContent
             ]  
-            ++ renderBootstrapScripts
         )
 
-renderNavBar: String -> List (NavBarLink msg) -> Html msg
-renderNavBar searchTitle navBarLinks =
+renderNavBar: NavBar msg -> Html msg
+renderNavBar navBar =
     Html.nav
         [ Attributes.class "navbar navbar-expand-md navbar-dark bg-dark fixed-top" ]
         [ Html.a 
-            [ Attributes.class "navbar-brand", Attributes.href "#" ]
+            [ Attributes.class "navbar-brand"
+            , Attributes.tabindex 1   ]
             [ Html.text "Navbar" ]
         , Html.button 
             [ Attributes.class "navbar-toggler"
@@ -48,8 +50,8 @@ renderNavBar searchTitle navBarLinks =
         , Html.div
             [ Attributes.class "collapse navbar-collapse"
             , Attributes.id "navbarsExampleDefault" ]
-            [ renderNavBarLinks navBarLinks
-            , renderSearch searchTitle ]
+            [ renderNavBarLinks navBar.navBarLinks
+            , renderSearch navBar.search ]
         ]
 
 renderNavBarLinks: List (NavBarLink msg) -> Html msg
@@ -73,7 +75,6 @@ renderNavBarDropDown navBarDropDown =
         [   Html.a 
                 [   
                     Attributes.class "nav-link dropdown-toggle", 
-                    Attributes.href navBarDropDown.url,
                     Attributes.id navBarDropDown.id,
                     Attributes.attribute "data-toggle" "dropdown",
                     Attributes.attribute "aria-haspopup" "true",
@@ -91,7 +92,8 @@ renderNavBarDropDown navBarDropDown =
 renderNavBarDropDownItem: NavBarDropDownItem msg -> Html msg
 renderNavBarDropDownItem navBarDropDownItem =
     Html.a 
-        [ Attributes.class "dropdown-item", Attributes.href navBarDropDownItem.url ]
+        [ Attributes.class "dropdown-item"
+        , Events.onClick navBarDropDownItem.onClick ]
         [ Html.text navBarDropDownItem.title ] 
 
 renderNavBarVanilla: NavBarVanilla msg -> Html msg
@@ -100,8 +102,8 @@ renderNavBarVanilla navBarVanilla =
         [ Attributes.class ("nav-item" ++ selectedClass navBarVanilla.state) ]
         [   Html.a 
                 [   
-                    Attributes.class ("nav-link" ++ disabledClass navBarVanilla.state), 
-                    Attributes.href navBarVanilla.url
+                    Attributes.class ("nav-link" ++ disabledClass navBarVanilla.state)
+                    , Events.onClick navBarVanilla.onClick
                 ]
                 (
                     [ Html.text navBarVanilla.title ] 
@@ -109,22 +111,24 @@ renderNavBarVanilla navBarVanilla =
                 ) 
         ] 
 
-renderSearch: String -> Html msg
-renderSearch searchTitle =
+renderSearch: Search msg -> Html msg
+renderSearch search =
     Html.form 
         [ Attributes.class "form-inline my-2 my-lg-0" ]
         [ Html.input 
             [ Attributes.class "form-control mr-sm-2"
             , Attributes.attribute "type" "text" 
-            , Attributes.attribute "placeholder" searchTitle 
-            , Attributes.attribute "aria-label" searchTitle 
+            , Attributes.attribute "placeholder" search.title 
+            , Attributes.attribute "aria-label" search.title 
+            , Events.onInput search.onInput
             ] 
             []
         , Html.button 
             [ Attributes.class "btn btn-outline-success my-2 my-sm-0"
-            , Attributes.attribute "type" "submit" 
+            , Attributes.attribute "type" "button" 
+            , Events.onClick search.onClick 
             ] 
-            [ Html.text searchTitle ]   
+            [ Html.text search.title ]   
         ] 
 
 renderPageTitleAndContent: String -> PageContent msg -> Html msg
@@ -151,31 +155,6 @@ renderPageContent pageContent =
             List.map (\(paragraph) -> Html.p [] [ Html.text paragraph ]) paragraphs
         Custom customHtml ->
             customHtml
-
-renderBootstrapScripts: List (Html msg)
-renderBootstrapScripts =
-        [ Html.node 
-            "script"
-            [ Attributes.attribute "src" "https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            , Attributes.attribute "integrity" "sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            , Attributes.attribute "crossorigin" "anonymous"
-            ]
-            []
-        , Html.node 
-            "script"
-            [ Attributes.attribute "src" "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            , Attributes.attribute "integrity" "sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            , Attributes.attribute "crossorigin" "anonymous"
-            ]
-            []    
-        , Html.node 
-            "script"
-            [ Attributes.attribute "src" "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-            , Attributes.attribute "integrity" "sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            , Attributes.attribute "crossorigin" "anonymous"
-            ]
-            []    
-        ]
 
 -- repeating the case statement in selectedClass and selectedSpan is a bit of a code smell but I'm not going to worry about it for now
 selectedClass: LinkState -> String
@@ -204,3 +183,30 @@ disabledClass linkState =
             " disabled"
         _ ->
             ""
+
+-- These render as p tags so are not useful.
+-- renderBootstrapScripts: List (Html msg)
+-- renderBootstrapScripts =
+--         [ Html.node 
+--             "script"
+--             [ Attributes.attribute "src" "https://code.jquery.com/jquery-3.2.1.slim.min.js"
+--             , Attributes.attribute "integrity" "sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+--             , Attributes.attribute "crossorigin" "anonymous"
+--             ]
+--             []
+--         , Html.node 
+--             "script"
+--             [ Attributes.attribute "src" "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+--             , Attributes.attribute "integrity" "sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+--             , Attributes.attribute "crossorigin" "anonymous"
+--             ]
+--             []    
+--         , Html.node 
+--             "script"
+--             [ Attributes.attribute "src" "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+--             , Attributes.attribute "integrity" "sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+--             , Attributes.attribute "crossorigin" "anonymous"
+--             ]
+--             []    
+--         ]
+
