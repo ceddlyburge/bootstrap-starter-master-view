@@ -24,7 +24,7 @@ navBarDropDown =
                   "dropdown01"
                   [ NavBarDropDownItem "Action" () ])
             |> Html.toString 0 
-            |> Expect.equal """<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Title</a><div class="dropdown-menu" aria-labelledby="dropdown01"><a class="dropdown-item">Action</a></div></li>""" 
+            |> Expect.equal """<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" id="dropdown01">Title</a><div class="dropdown-menu" aria-labelledby="dropdown01"><a class="dropdown-item">Action</a></div></li>""" 
 
 
 navBarLinkVanillaSelected : Test
@@ -66,7 +66,7 @@ search =
         \() ->
             searchToHtmlString (Search "Search" (\s -> ()) () )
             |> Html.toString 0
-            |> Expect.equal """<form class="form-inline my-2 my-lg-0"><input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search"><button class="btn btn-outline-success my-2 my-sm-0" type="button">Search</button></form>"""
+            |> Expect.equal """<form class="form-inline my-2 my-lg-0"><input class="form-control mr-sm-2" aria-label="Search" placeholder="Search" type="text"><button class="btn btn-outline-success my-2 my-sm-0" type="button">Search</button></form>"""
 
 
 navBar : Test
@@ -81,11 +81,12 @@ navBar =
                 (Search "Search" (\s -> ()) ())
               ) 
             |> Html.toString 2
-            |> Expect.equal """<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            |> String.filter isBlackspace
+            |> Expect.equal (String.filter isBlackspace """<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
   <a class="navbar-brand" tab-index="1">
     Navbar
   </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navbarsExampleDefault" data-target="#navbarsExampleDefault" data-toggle="collapse" type="button">
     <span class="navbar-toggler-icon">
     </span>
   </button>
@@ -98,13 +99,13 @@ navBar =
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+      <input class="form-control mr-sm-2" aria-label="Search" placeholder="Search" type="text">
       <button class="btn btn-outline-success my-2 my-sm-0" type="button">
         Search
       </button>
     </form>
   </div>
-</nav>"""
+</nav>""")
 
 pageTitleAndContentParagraphs : Test
 pageTitleAndContentParagraphs =
@@ -112,7 +113,7 @@ pageTitleAndContentParagraphs =
         \() ->
             pageTitleAndContentToHtmlString "Header" ( Paragraphs [ "a", "b" ] )
             |> Html.toString 0
-            |> Expect.equal """<main role="main" class="container"><div class="starter-template"><h1>Header</h1><p>a</p><p>b</p></div></main>"""
+            |> Expect.equal """<main class="container" role="main"><div class="starter-template"><h1>Header</h1><p>a</p><p>b</p></div></main>"""
 
 pageTitleAndContentCustom : Test
 pageTitleAndContentCustom =
@@ -120,7 +121,7 @@ pageTitleAndContentCustom =
         \() ->
             pageTitleAndContentToHtmlString "Heading" (Custom <| [ Html.div [] [] ] )
             |> Html.toString 0
-            |> Expect.equal """<main role="main" class="container"><div class="starter-template"><h1>Heading</h1><div></div></div></main>"""
+            |> Expect.equal """<main class="container" role="main"><div class="starter-template"><h1>Heading</h1><div></div></div></main>"""
 
 endToEnd : Test
 endToEnd =
@@ -165,7 +166,7 @@ endToEnd =
     <a class="navbar-brand" tab-index="1">
       Navbar
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navbarsExampleDefault" data-target="#navbarsExampleDefault" data-toggle="collapse" type="button">
       <span class="navbar-toggler-icon">
       </span>
     </button>
@@ -190,7 +191,7 @@ endToEnd =
           </a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" id="dropdown01">
             Dropdown
           </a>
           <div class="dropdown-menu" aria-labelledby="dropdown01">
@@ -207,14 +208,14 @@ endToEnd =
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+        <input class="form-control mr-sm-2"  aria-label="Search" placeholder="Search" type="text">
         <button class="btn btn-outline-success my-2 my-sm-0" type="button">
           Search
         </button>
       </form>
     </div>
   </nav>
-  <main role="main" class="container">
+  <main class="container" role="main">
     <div class="starter-template">
       <h1>
         Bootstrap starter template
@@ -231,4 +232,4 @@ endToEnd =
 
 isBlackspace: Char -> Bool
 isBlackspace char = 
-  char /= ' ' && char /= '\n'
+  char /= ' ' && char /= '\n' && char /= '\r'

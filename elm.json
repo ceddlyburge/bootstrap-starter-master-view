@@ -1,0 +1,21 @@
+﻿{
+    "type": "package",
+    "name": "ceddlyburge/elm-bootstrap-starter-master-view",
+    "summary": "Creates Html similar to the Bootstrap Starter template",
+    "license": "MIT",
+    "version": "0.0.1",
+    "exposed-modules": [ 
+        "BootstrapStarterRenderHtml", 
+        "BootstrapStarter" 
+    ],
+    "elm-version": "0.19.0 <= v < 0.20.0",
+    "dependencies": {
+            "elm/browser": "1.0.1 <= v < 2.0.0",
+            "elm/core": "1.0.2 <= v < 2.0.0",
+            "elm/html": "1.0.0 <= v < 2.0.0",
+            "zwilias/elm-html-string": "2.0.2 <= v < 3.0.0"
+    },
+    "test-dependencies": {
+        "elm-explorations/test": "1.0.0"
+    }
+}
