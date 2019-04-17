@@ -10,7 +10,7 @@ navBarDropDownItem : Test
 navBarDropDownItem =
     test "navBarDropDownItem returns correct html" <|
         \() ->
-            renderNavBarDropDownItem (NavBarDropDownItem "Action" ()) 
+            navBarDropDownItemToHtmlString (NavBarDropDownItem "Action" ()) 
             |> Html.toString 0 
             |> Expect.equal """<a class="dropdown-item">Action</a>"""
 
@@ -18,7 +18,7 @@ navBarDropDown : Test
 navBarDropDown =
     test "navBarDropDown returns correct html" <|
         \() ->
-            renderNavBarDropDown 
+            navBarDropDownToHtmlString 
               ( NavBarDropDown
                   "Title"
                   "dropdown01"
@@ -31,7 +31,7 @@ navBarLinkVanillaSelected : Test
 navBarLinkVanillaSelected =
     test "navBarVanilla returns correct html when selected" <|
         \() ->
-            renderNavBarVanilla (NavBarVanilla "Home" () LinkStateSelected) 
+            navBarVanillaToHtmlString (NavBarVanilla "Home" () LinkStateSelected) 
             |> Html.toString 0 
             |> Expect.equal """<li class="nav-item active"><a class="nav-link">Home<span class="sr-only">(current)</span></a></li>"""
 
@@ -40,7 +40,7 @@ navBarLinkVanillaDisabled : Test
 navBarLinkVanillaDisabled =
     test "navBarVanilla returns correct html when disabled" <|
         \() ->
-            renderNavBarVanilla (NavBarVanilla "Disabled" () LinkStateDisabled) 
+            navBarVanillaToHtmlString (NavBarVanilla "Disabled" () LinkStateDisabled) 
             |> Html.toString 0 
             |> Expect.equal """<li class="nav-item"><a class="nav-link disabled">Disabled</a></li>"""
 
@@ -48,7 +48,7 @@ navBarLinkVanilla : Test
 navBarLinkVanilla =
     test "navBarVanilla returns correct html when in vanilla state" <|
         \() ->
-            renderNavBarVanilla (NavBarVanilla "Link" () LinkStateVanilla) 
+            navBarVanillaToHtmlString (NavBarVanilla "Link" () LinkStateVanilla) 
             |> Html.toString 0 
             |> Expect.equal """<li class="nav-item"><a class="nav-link">Link</a></li>"""
 
@@ -56,7 +56,7 @@ navBarLinks : Test
 navBarLinks =
     test "renderNavBarLinks returns correct html" <|
         \() ->
-            renderNavBarLinks [ Vanilla <| NavBarVanilla "Link" () LinkStateVanilla ]
+            navBarLinksToHtmlString [ Vanilla <| NavBarVanilla "Link" () LinkStateVanilla ]
             |> Html.toString 0 
             |> Expect.equal """<ul class="navbar-nav mr-auto"><li class="nav-item"><a class="nav-link">Link</a></li></ul>"""
   
@@ -64,7 +64,7 @@ search : Test
 search =
     test "renderSearch returns correct html" <|
         \() ->
-            renderSearch (Search "Search" (\s -> ()) () )
+            searchToHtmlString (Search "Search" (\s -> ()) () )
             |> Html.toString 0
             |> Expect.equal """<form class="form-inline my-2 my-lg-0"><input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search"><button class="btn btn-outline-success my-2 my-sm-0" type="button">Search</button></form>"""
 
@@ -73,7 +73,7 @@ navBar : Test
 navBar =
     test "renderNavBar returns correct html" <|
         \() ->
-            renderNavBar 
+            navBarToHtmlString 
               (NavBar 
                 "Navbar"
                 ()
@@ -108,17 +108,17 @@ navBar =
 
 pageTitleAndContentParagraphs : Test
 pageTitleAndContentParagraphs =
-    test "renderPageContent returns p tags for each paragraph" <|
+    test "pageTitleAndContent returns p tags for each paragraph" <|
         \() ->
-            renderPageTitleAndContent "Header" ( Paragraphs [ "a", "b" ] )
+            pageTitleAndContentToHtmlString "Header" ( Paragraphs [ "a", "b" ] )
             |> Html.toString 0
             |> Expect.equal """<main role="main" class="container"><div class="starter-template"><h1>Header</h1><p>a</p><p>b</p></div></main>"""
 
 pageTitleAndContentCustom : Test
 pageTitleAndContentCustom =
-    test "renderPageContent returns passed custom content" <|
+    test "pageTitleAndContent returns passed custom content" <|
         \() ->
-            renderPageTitleAndContent "Heading" (Custom <| [ Html.div [] [] ] )
+            pageTitleAndContentToHtmlString "Heading" (Custom <| [ Html.div [] [] ] )
             |> Html.toString 0
             |> Expect.equal """<main role="main" class="container"><div class="starter-template"><h1>Heading</h1><div></div></div></main>"""
 
@@ -157,7 +157,7 @@ endToEnd =
                             , "All you get is this text and a mostly barebones HTML document." 
                         ])
             in
-                renderPage masterPageType
+                toHtmlString masterPageType
                 |> Html.toString 2 
                 |> String.filter isBlackspace
                 |> Expect.equal (String.filter isBlackspace """<div>

@@ -1,12 +1,12 @@
 module BootstrapStarterRenderHtmlString exposing (
-    renderPage, 
-    renderNavBarDropDownItem, 
-    renderNavBarDropDown, 
-    renderNavBarVanilla, 
-    renderSearch,
-    renderNavBar,
-    renderNavBarLinks,
-    renderPageTitleAndContent)
+    toHtmlString, 
+    navBarDropDownItemToHtmlString, 
+    navBarDropDownToHtmlString, 
+    navBarVanillaToHtmlString, 
+    searchToHtmlString,
+    navBarToHtmlString,
+    navBarLinksToHtmlString,
+    pageTitleAndContentToHtmlString)
 
 import Html.String as Html exposing (Html)
 import Html.String.Attributes as Attributes
@@ -15,19 +15,19 @@ import BootstrapStarter exposing (..)
 
 -- add comment about scope / visisibility and having to make so for the tests
 
-renderPage: BootstrapStarter msg -> Html msg
-renderPage bootstrap =
+toHtmlString: BootstrapStarter msg -> Html msg
+toHtmlString bootstrap =
     Html.node
         "div"
         []
         (
-            [ renderNavBar bootstrap.navBar
-            , renderPageTitleAndContent bootstrap.pageTitle bootstrap.pageContent
+            [ navBarToHtmlString bootstrap.navBar
+            , pageTitleAndContentToHtmlString bootstrap.pageTitle bootstrap.pageContent
             ]  
         )
 
-renderNavBar: NavBar msg -> Html msg
-renderNavBar navBar =
+navBarToHtmlString: NavBar msg -> Html msg
+navBarToHtmlString navBar =
     Html.nav
         [ Attributes.class "navbar navbar-expand-md navbar-dark bg-dark fixed-top" ]
         [ Html.a 
@@ -50,26 +50,26 @@ renderNavBar navBar =
         , Html.div
             [ Attributes.class "collapse navbar-collapse"
             , Attributes.id "navbarsExampleDefault" ]
-            [ renderNavBarLinks navBar.navBarLinks
-            , renderSearch navBar.search ]
+            [ navBarLinksToHtmlString navBar.navBarLinks
+            , searchToHtmlString navBar.search ]
         ]
 
-renderNavBarLinks: List (NavBarLink msg) -> Html msg
-renderNavBarLinks navBarLinks =
+navBarLinksToHtmlString: List (NavBarLink msg) -> Html msg
+navBarLinksToHtmlString navBarLinks =
     Html.ul
         [ Attributes.class "navbar-nav mr-auto" ]
-        ( List.map renderNavBarLink navBarLinks)
+        ( List.map navBarLinkToHtmlString navBarLinks)
 
-renderNavBarLink: NavBarLink msg -> Html msg
-renderNavBarLink navBarlink =
+navBarLinkToHtmlString: NavBarLink msg -> Html msg
+navBarLinkToHtmlString navBarlink =
     case navBarlink of 
         Vanilla navBarLinkVanilla ->
-            renderNavBarVanilla navBarLinkVanilla
+            navBarVanillaToHtmlString navBarLinkVanilla
         DropDown navBarDropDown ->
-            renderNavBarDropDown navBarDropDown 
+            navBarDropDownToHtmlString navBarDropDown 
 
-renderNavBarDropDown: NavBarDropDown msg -> Html msg
-renderNavBarDropDown navBarDropDown =
+navBarDropDownToHtmlString: NavBarDropDown msg -> Html msg
+navBarDropDownToHtmlString navBarDropDown =
     Html.li 
         [ Attributes.class "nav-item dropdown" ]
         [   Html.a 
@@ -86,18 +86,18 @@ renderNavBarDropDown navBarDropDown =
                     Attributes.class "dropdown-menu",
                     Attributes.attribute "aria-labelledby" navBarDropDown.id
                  ]
-                (List.map renderNavBarDropDownItem navBarDropDown.items)
+                (List.map navBarDropDownItemToHtmlString navBarDropDown.items)
         ] 
 
-renderNavBarDropDownItem: NavBarDropDownItem msg -> Html msg
-renderNavBarDropDownItem navBarDropDownItem =
+navBarDropDownItemToHtmlString: NavBarDropDownItem msg -> Html msg
+navBarDropDownItemToHtmlString navBarDropDownItem =
     Html.a 
         [ Attributes.class "dropdown-item"
         , Events.onClick navBarDropDownItem.onClick ]
         [ Html.text navBarDropDownItem.title ] 
 
-renderNavBarVanilla: NavBarVanilla msg -> Html msg
-renderNavBarVanilla navBarVanilla =
+navBarVanillaToHtmlString: NavBarVanilla msg -> Html msg
+navBarVanillaToHtmlString navBarVanilla =
     Html.li 
         [ Attributes.class ("nav-item" ++ selectedClass navBarVanilla.state) ]
         [   Html.a 
@@ -111,8 +111,8 @@ renderNavBarVanilla navBarVanilla =
                 ) 
         ] 
 
-renderSearch: Search msg -> Html msg
-renderSearch search =
+searchToHtmlString: Search msg -> Html msg
+searchToHtmlString search =
     Html.form 
         [ Attributes.class "form-inline my-2 my-lg-0" ]
         [ Html.input 
@@ -131,8 +131,8 @@ renderSearch search =
             [ Html.text search.title ]   
         ] 
 
-renderPageTitleAndContent: String -> PageContent msg -> Html msg
-renderPageTitleAndContent pageTitle pageContent =
+pageTitleAndContentToHtmlString: String -> PageContent msg -> Html msg
+pageTitleAndContentToHtmlString pageTitle pageContent =
     Html.main_
         [ Attributes.attribute "role" "main"
         , Attributes.class "container" 
@@ -144,12 +144,12 @@ renderPageTitleAndContent pageTitle pageContent =
                     []
                     [ Html.text pageTitle ]
                 ]
-                ++ renderPageContent pageContent
+                ++ pageContentToHtmlString pageContent
             )
         ]
 
-renderPageContent: PageContent msg -> List (Html msg)
-renderPageContent pageContent =
+pageContentToHtmlString: PageContent msg -> List (Html msg)
+pageContentToHtmlString pageContent =
     case pageContent of
         Paragraphs paragraphs ->
             List.map (\(paragraph) -> Html.p [] [ Html.text paragraph ]) paragraphs

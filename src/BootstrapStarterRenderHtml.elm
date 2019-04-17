@@ -1,12 +1,20 @@
-module BootstrapStarterRenderHtml exposing (
-    renderPage)
+module BootstrapStarterRenderHtml exposing (toHtml)
+
+{-|
+
+# Creating Html from a BootstrapStarter 
+@docs toHtml
+
+-}
 
 import Html exposing (Html)
 import Html.String exposing (Html)
 import BootstrapStarter exposing (..)
-import BootstrapStarterRenderHtmlString as BootstrapStarterRenderHtmlString exposing (renderPage)
+import BootstrapStarterRenderHtmlString as BootstrapStarterRenderHtmlString exposing (toHtmlString)
 
-renderPage: BootstrapStarter msg -> Html.Html msg
-renderPage bootstrap =
+{-| Convert a BootstrapStarter msg to Html msg
+-}
+toHtml: BootstrapStarter msg -> Html.Html msg
+toHtml bootstrap =
     BootstrapStarterRenderHtmlString.renderPage bootstrap
     |> Html.String.toHtml

@@ -9,14 +9,10 @@ module BootstrapStarter exposing (
     Search,
     PageContent(..))
 
-
--- add comment about why Html.String is used
-
-
 {-|
 
 # Creating BootstrapStarter master view type
-@docs BootstrapStarter, PageContent, NavBarLink, NavBarVanilla, LinkState, NavBarDropDown, NavBarDropDownItem, Search
+@docs BootstrapStarter, NavBar,  NavBarLink, NavBarVanilla, LinkState, NavBarDropDown, NavBarDropDownItem, Search, PageContent
 
 -}
 
