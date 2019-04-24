@@ -1,9 +1,9 @@
 {
     "type": "package",
-    "name": "ceddlyburge/bootstrap-starter-master-view",
+    "name": "ceddlyburge/elm-bootstrap-starter-master-view",
     "summary": "Creates Html similar to the Bootstrap Starter template",
     "license": "MIT",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "exposed-modules": [ 
         "BootstrapStarterToHtml", 
         "BootstrapStarter" 
