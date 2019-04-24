@@ -1,4 +1,4 @@
-module BootstrapStarterRenderHtmlString exposing (
+module BootstrapStarterToHtmlString exposing (
     toHtmlString, 
     navBarDropDownItemToHtmlString, 
     navBarDropDownToHtmlString, 
