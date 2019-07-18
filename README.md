@@ -1,6 +1,6 @@
 # Elm Master Page Type for "Bootstrap Starter"
 
-This repo contains types and functions that represent the Bootstrap Starter template (https://getbootstrap.com/docs/4.3/examples/starter-template/)
+This repo contains types and functions that represent the Bootstrap Starter template (https://getbootstrap.com/docs/4.3/examples/starter-template/). It is part of a [blog post about scaling views in Elm](https://www.freecodecamp.org/news/scaling-elm-views-with-master-view-types/)
 
 ## Usage
 
